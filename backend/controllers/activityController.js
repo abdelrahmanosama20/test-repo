@@ -9,12 +9,13 @@ const advertiser = require('../models/advertiserModel')
 const createActivity = async (req, res) => {
     try {
         // Destructure the request body to get activity details
-        const { name, date, duration, location, price, time, category, ratings, tags, tourGuideId, advertiserId} = req.body;
+        const { name, date, duration, address, location, price, time, category, ratings, tags, tourGuideId, advertiserId, specialDiscount, bookingOpen} = req.body;
 
         const newActivity = new Activity({
             name,
             date,
             duration,
+            address,
             location,
             price,
             time,

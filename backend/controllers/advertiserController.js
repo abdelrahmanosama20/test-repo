@@ -1,5 +1,6 @@
 const { default: mongoose } = require('mongoose')
 const Advertiser = require('../models/advertiserModel')
+const Activity = require('../models/activityModel')
 
 
 // get all workout
@@ -56,6 +57,58 @@ const getAdvertisers = async (req, res) => {
     }
 };
 
+const getActivitieswithAdvertiserId = async (req, res) => {
+  try {
+      const activities = await Activity.find({ advertiserId: req.params.id });
+      res.json(activities);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+  }
+}
+
+const deleteActivityById = async (req, res) => {
+  try {
+      const { id } = req.params; // Get the ID from the request parameters
+
+      // Find the activity by ID and delete it
+      const deletedActivity = await Activity.findByIdAndDelete(id);
+
+      // Check if the activity was found and deleted
+      if (!deletedActivity) {
+          return res.status(404).json({ message: 'Activity not found' });
+      }
+
+      res.status(200).json({ message: 'Activity deleted successfully' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+const updateActivityWithId = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the ID from the request parameters
+    const updatedData = req.body; // Get the updated data from the request body
+
+    // Find the activity by ID and update it with the new data
+    const updatedActivity = await Activity.findByIdAndUpdate(id, updatedData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure the update respects schema validation
+    });
+
+    // Check if the activity was found and updated
+    if (!updatedActivity) {
+      return res.status(404).json({ message: 'Activity not found' });
+    }
+
+    res.status(200).json({ message: 'Activity updated successfully', updatedActivity });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // get a single workout
 const getWorkout = async (req, res) => {
 
@@ -79,4 +132,4 @@ const updateWorkout = async (req, res) => {
 
 }
 
-module.exports = {createAdvertiser, getAdvertisers}
+module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId}

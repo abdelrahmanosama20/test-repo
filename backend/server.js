@@ -10,8 +10,11 @@ const historicalPlaceRoutes = require('./routes/historicalPlaces')
 const productRoutes = require('./routes/products')
 const sellerRoutes = require('./routes/sellers')
 const mongoose = require('mongoose')
+const cors = require('cors');
 
 const app = express()
+
+app.use(cors());
 
 app.use(express.json())
 
