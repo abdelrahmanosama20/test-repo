@@ -9,6 +9,7 @@ const ItineraryRoutes = require('./routes/itineraries')
 const historicalPlaceRoutes = require('./routes/historicalPlaces')
 const productRoutes = require('./routes/products')
 const sellerRoutes = require('./routes/sellers')
+const adminRoutes = require('./routes/admins')
 const mongoose = require('mongoose')
 const cors = require('cors');
 
@@ -32,15 +33,15 @@ app.use('/api/itineraries', ItineraryRoutes)
 app.use('/api/historicalPlaces', historicalPlaceRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/sellers', sellerRoutes)
+app.use('/api/admins', adminRoutes)
 
 // connect to db
 mongoose.connect(process.env.MONG_URI)
     .then(() => {
         // listen for requests
-        app.listen(process.env.PORT, () => {
-            console.log('connected to db & listening on port', process.env.PORT )
+        app.listen(process.env.PORT || 5000, () => {
+            console.log(`Server running on port ${process.env.PORT || 5000}` )
         }) 
     })
-    .catch((error) => {
-        console.log(error)
-    })
+    .catch(error => console.error('Database connection error:', error));
+    

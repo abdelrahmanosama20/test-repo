@@ -61,6 +61,26 @@ const getTourGuides = async (req, res) => {
     }
 };
 
+// Delete Tour Guide by ID
+const deleteTourGuide = async (req, res) => {
+  try {
+      const { id } = req.params; // Get the tour guide ID from the request parameters
+
+      // Find the tour guide and delete them
+      const deletedTourGuide = await TourGuide.findByIdAndDelete(id);
+
+      // Check if the tour guide was found and deleted
+      if (!deletedTourGuide) {
+          return res.status(404).json({ message: 'Tour guide not found' });
+      }
+
+      res.status(200).json({ message: 'Tour guide deleted successfully' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error deleting tour guide', error: error.message });
+  }
+};
+
 // get a single workout
 const getWorkout = async (req, res) => {
 
@@ -84,4 +104,4 @@ const updateWorkout = async (req, res) => {
 
 }
 
-module.exports = {createTourGuide, getTourGuides}
+module.exports = {createTourGuide, getTourGuides, deleteTourGuide}

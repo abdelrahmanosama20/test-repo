@@ -109,6 +109,26 @@ const updateActivityWithId = async (req, res) => {
   }
 };
 
+// Delete advertiser by ID
+const deleteAdvertiser = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the advertiser ID from the request parameters
+
+        // Find the advertiser and delete them
+        const deletedAdvertiser = await Advertiser.findByIdAndDelete(id);
+
+        // Check if the advertiser was found and deleted
+        if (!deletedAdvertiser) {
+            return res.status(404).json({ message: 'Advertiser not found' });
+        }
+
+        res.status(200).json({ message: 'Advertiser deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error deleting advertiser', error: error.message });
+    }
+};
+
 // get a single workout
 const getWorkout = async (req, res) => {
 
@@ -132,4 +152,4 @@ const updateWorkout = async (req, res) => {
 
 }
 
-module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId}
+module.exports = {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId, deleteAdvertiser}

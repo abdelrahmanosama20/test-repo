@@ -1,5 +1,5 @@
 const express = require('express')
-const {createSeller, getSellers} = require('../controllers/sellerController')
+const {createSeller, getSellers, deleteSeller} = require('../controllers/sellerController')
 const router = express.Router()
 
 router.get('/', getSellers)
@@ -9,6 +9,7 @@ router.get('/', getSellers)
 router.post('/', createSeller)
 
 //router.delete('/:id', deleteWorkout)
+router.delete('/:id', deleteSeller); // Add delete route
 
 //router.patch('/:id', updateWorkout)
 

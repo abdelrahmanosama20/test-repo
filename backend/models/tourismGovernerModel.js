@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt');
 
 const schema = mongoose.Schema
 
 const tourismGovernerSchema = new schema({
 
-    name: {
+    username: {
         type: String,
         required: true
       },
@@ -31,5 +32,13 @@ const tourismGovernerSchema = new schema({
       }
     
 }, { timestamps : true })
+
+// Pre-save hook to hash password before saving
+tourismGovernerSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
 module.exports = mongoose.model('tourismGoverner' ,tourismGovernerSchema)

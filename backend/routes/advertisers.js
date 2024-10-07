@@ -1,5 +1,5 @@
 const express = require('express')
-const {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId} = require('../controllers/advertiserController')
+const {createAdvertiser, getAdvertisers, getActivitieswithAdvertiserId, deleteActivityById, updateActivityWithId, deleteAdvertiser} = require('../controllers/advertiserController')
 const router = express.Router()
 
 router.get('/', getAdvertisers)
@@ -15,6 +15,10 @@ router.put('/:id/activities', updateActivityWithId);
 router.post('/', createAdvertiser)
 
 //router.delete('/:id', deleteWorkout)
+
+// DELETE advertiser by ID
+router.delete('/:id', deleteAdvertiser); // Add delete route
+
 
 //router.patch('/:id', updateWorkout)
 

@@ -1,5 +1,5 @@
 const express = require('express')
-const {createTourismGoverner, getTourismGoverners} = require('../controllers/tourismGovernerController')
+const {createTourismGoverner, getTourismGoverners, deleteTourismGoverner} = require('../controllers/tourismGovernerController')
 const router = express.Router()
 
 router.get('/', getTourismGoverners)
@@ -7,6 +7,9 @@ router.get('/', getTourismGoverners)
 //router.get('/:id', getWorkout)
 
 router.post('/', createTourismGoverner)
+
+// DELETE tourism governor by ID
+router.delete('/:id', deleteTourismGoverner); // Add delete route
 
 //router.delete('/:id', deleteWorkout)
 

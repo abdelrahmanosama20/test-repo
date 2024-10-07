@@ -52,4 +52,24 @@ const getSellers = async (req, res) => {
     }
 };
 
-module.exports = {createSeller, getSellers}
+// Delete seller by ID
+const deleteSeller = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the seller ID from the request parameters
+
+        // Find the seller and delete them
+        const deletedSeller = await Seller.findByIdAndDelete(id);
+
+        // Check if the seller was found and deleted
+        if (!deletedSeller) {
+            return res.status(404).json({ message: 'Seller not found' });
+        }
+
+        res.status(200).json({ message: 'Seller deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error deleting seller', error: error.message });
+    }
+};
+
+module.exports = {createSeller, getSellers, deleteSeller}
