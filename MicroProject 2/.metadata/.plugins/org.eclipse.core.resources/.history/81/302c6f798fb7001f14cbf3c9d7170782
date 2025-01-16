@@ -1,0 +1,106 @@
+package Components;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Memory {
+    private static final int BLOCK_SIZE = 4; // 4 bytes per block (1 word)
+    private static final int CACHE_SIZE = 16; // Cache can hold 16 blocks
+    private byte[] mainMemory; // Simulated main memory
+    private CacheBlock[] cache; // Cache to store blocks
+
+    public Memory(int memorySize) {
+        mainMemory = new byte[memorySize];
+        cache = new CacheBlock[CACHE_SIZE];
+        for (int i = 0; i < CACHE_SIZE; i++) {
+            cache[i] = new CacheBlock();
+        }
+    }
+
+    // A method to simulate loading data into memory (for testing purposes)
+    public void loadData(int address, byte[] data) {
+        for (int i = 0; i < data.length; i++) {
+            mainMemory[address + i] = data[i];
+        }
+    }
+
+    // Method to simulate a memory load operation (LW)
+    public byte[] loadWord(int address) {
+        int blockStartAddress = (address / BLOCK_SIZE) * BLOCK_SIZE; // Block aligned address
+        int cacheIndex = blockStartAddress % CACHE_SIZE; // Cache index based on address
+        CacheBlock cacheBlock = cache[cacheIndex];
+
+        // Check if cache has the block
+        if (cacheBlock.isValid && cacheBlock.startAddress == blockStartAddress) {
+            // Cache hit: Return the 4 bytes from cache
+            System.out.println("Cache Hit: Loading data from cache");
+            return getDataFromCache(cacheBlock, address);
+        } else {
+            // Cache miss: Load block from memory into cache
+            System.out.println("Cache Miss: Loading block from memory");
+            loadBlockIntoCache(cacheBlock, blockStartAddress);
+            return getDataFromCache(cacheBlock, address);
+        }
+    }
+
+    // Helper method to get data from a cache block
+    private byte[] getDataFromCache(CacheBlock cacheBlock, int address) {
+        byte[] result = new byte[BLOCK_SIZE];
+        int offset = address % BLOCK_SIZE;
+        for (int i = 0; i < BLOCK_SIZE; i++) {
+            result[i] = cacheBlock.data[i + offset];
+        }
+        return result;
+    }
+
+    // Helper method to load a block from memory into cache
+    private void loadBlockIntoCache(CacheBlock cacheBlock, int blockStartAddress) {
+        // Read 4 bytes from memory and load into cache block
+        for (int i = 0; i < BLOCK_SIZE; i++) {
+            cacheBlock.data[i] = mainMemory[blockStartAddress + i];
+        }
+        cacheBlock.startAddress = blockStartAddress;
+        cacheBlock.isValid = true; // Mark block as valid after loading
+    }
+
+    // Cache block class to represent a block in the cache
+    private static class CacheBlock {
+        byte[] data = new byte[BLOCK_SIZE]; // Holds 4 bytes (1 word)
+        int startAddress; // Starting address of the block in memory
+        boolean isValid; // Indicates if the block is valid in cache
+    }
+
+    // Testing the memory class
+    public static void main(String[] args) {
+        Memory memory = new Memory(1024); // Initialize memory with 1024 bytes
+
+        // Load some data into memory for testing
+        memory.loadData(100, new byte[]{10, 20, 30, 40}); // Load data starting at address 100
+        memory.loadData(104, new byte[]{50, 60, 70, 80}); // Load data starting at address 104
+
+        // Simulate a load word operation at address 100
+        byte[] data = memory.loadWord(100);
+        System.out.println("Loaded Data: " + byteArrayToHex(data));
+
+        // Simulate another load word operation at address 100 (Cache hit)
+        data = memory.loadWord(100);
+        System.out.println("Loaded Data: " + byteArrayToHex(data));
+
+        // Simulate a load word operation at address 104
+        data = memory.loadWord(104);
+        System.out.println("Loaded Data: " + byteArrayToHex(data));
+
+        // Simulate a load word operation at address 108 (Cache miss)
+        data = memory.loadWord(108);
+        System.out.println("Loaded Data: " + byteArrayToHex(data));
+    }
+
+    // Utility method to convert byte array to hex string for easy viewing
+    public static String byteArrayToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02X ", b));
+        }
+        return sb.toString().trim();
+    }
+}

@@ -1,0 +1,71 @@
+package Components;
+
+import java.util.HashMap;
+//import java.util.Scanner;
+import java.util.Map;
+
+public class LoadBuffer {
+	public String Tag ;
+    public boolean busy;
+    public int address;
+    public double result;
+    public Integer timeRemaining; 
+    public instruction instruction;
+    public HashMap<Integer, RegFile> regFile; // Floating-point registers    
+    public Cache cache;
+    
+    
+    public LoadBuffer(Cache cache) {
+    	
+    }
+// should also take the instance of the reg file 
+  // the reg file would actually be a hashmap
+public void TakingInInstruction(instruction instruction,HashMap<Integer, RegFile> regFile) {
+	this.instruction=instruction;
+	this.busy=true;
+	this.regFile=regFile;
+	//Loop Thru the hashmap compare the destination register in the instruction with Attribute RegName
+    for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+    	RegFile RegFileinstance = entry.getValue();
+          if(instruction.instructionDestinationReg.equals(RegFileinstance.RegName)){
+        	  RegFileinstance.q=this.Tag;
+        	  break;
+          }
+};
+
+}
+// Now we have the instruction , we should extract the operands calculate the address of the Memory where we will access to load 
+
+public void CalculatingAddressAndAccessingMmeory() {
+	// We are assuming that for loads , the operands are always ready ?
+	String TobeCastedtoIntegerFirstPartOfAddress =this.instruction.j;
+    int FirstPartOfAddress = Integer.parseInt(TobeCastedtoIntegerFirstPartOfAddress);
+    String ToBeCastedtoIntegerSecondPartOfAddress = this.instruction.k;
+    int SecondPartOfAddress = Integer.parseInt(ToBeCastedtoIntegerSecondPartOfAddress);
+    this.address=FirstPartOfAddress+SecondPartOfAddress;
+// 	Forget about the memory for now 
+     // maybe call the method that handles memory here , Should take into consideration the latency both the one entered by the user And the one of the cache miss
+    
+   //Accessing the cache 
+    
+    this.busy=false;
+    //Should remove the tag from the REG FILE and place the content ?
+}
+
+
+
+
+@Override
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("LoadBuffer Details:\n");
+    sb.append("Tag: ").append(Tag).append("\n");
+    sb.append("Busy: ").append(busy).append("\n");
+    sb.append("Address: ").append(address).append("\n");
+    sb.append("Result: ").append(result).append("\n");
+    sb.append("Time Remaining: ").append(timeRemaining != null ? timeRemaining : "N/A").append("\n");
+    return sb.toString();
+}
+
+
+}

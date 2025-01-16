@@ -1,0 +1,62 @@
+package Components;
+
+import java.util.HashMap;
+//import java.util.Scanner;
+import java.util.Map;
+
+public class LoadBuffer {
+	public String Tag ;
+    public boolean busy;
+    public int address;
+    public double result;
+    public Integer timeRemaining; // Use Integer for optional values (nullable).
+    public Integer currentIndex; // Use Integer for optional values (nullable).
+    public instruction instruction;
+    public HashMap<Integer, RegFile> regFile; // Floating-point registers    
+// should also take the instance of the reg file 
+  // the reg file would actually be a hashmap
+public void TakingInInstruction(instruction instruction,HashMap<Integer, RegFile> regFile) {
+	this.instruction=instruction;
+	this.busy=true;
+	this.regFile=regFile;
+	//Loop Thru the hashmap compare the destination register in the instruction with Attribute RegName
+    for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+    	RegFile RegFileinstance = entry.getValue();
+          if(instruction.getInstructionDestinationReg().equals(RegFileinstance.RegName)){
+        	  RegFileinstance.q=this.Tag;
+        	  break;
+          }
+};
+
+}
+
+
+
+
+
+@Override
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("LoadBuffer Details:\n");
+    sb.append("Tag: ").append(Tag).append("\n");
+    sb.append("Busy: ").append(busy).append("\n");
+    sb.append("Address: ").append(address).append("\n");
+    sb.append("Result: ").append(result).append("\n");
+    sb.append("Time Remaining: ").append(timeRemaining != null ? timeRemaining : "N/A").append("\n");
+    sb.append("Current Index: ").append(currentIndex != null ? currentIndex : "N/A").append("\n");
+    sb.append("Instruction: ").append(instruction != null ? instruction.toString() : "No instruction").append("\n");
+
+    // Print regFile details
+    sb.append("RegFile Details:\n");
+    if (regFile != null && !regFile.isEmpty()) {
+        for (Map.Entry<Integer, RegFile> entry : regFile.entrySet()) {
+            sb.append("Index ").append(entry.getKey()).append(": ").append(entry.getValue().toString()).append("\n");
+        }
+    } else {
+        sb.append("No registers available.\n");
+    }
+    return sb.toString();
+}
+
+
+}

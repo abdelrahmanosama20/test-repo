@@ -1,0 +1,40 @@
+package Components;
+
+import java.util.Hashtable;
+
+public class RegFile {
+    public Double value; // Can be nullable
+    public String q; // Can be nullable , tag or 0 
+    public int index;
+    public String RegName;
+    
+    // Constructor
+    public RegFile(Double value, String q, int index, String RegName) {
+        this.value = value;
+        this.q = q;
+        this.index = index;
+        this.RegName = RegName;
+    }
+
+
+
+    public static Hashtable<Integer, RegFile> generateStoreBufferTable(int numOfHashes) {
+        Hashtable<Integer, RegFile> regFileTable = new Hashtable<>();
+
+        // Populate the hash table with StoreBuffer instances
+        for (int i = 0; i < numOfHashes; i++) {
+            RegFile regFile = new RegFile(
+                    null,
+                    null, // address (arbitrary value based on index)
+                    0,
+                    null
+
+            );
+
+            // Store the StoreBuffer object in the hash table
+            regFileTable.put(i, regFile);
+        }
+
+        return regFileTable;
+    }
+}

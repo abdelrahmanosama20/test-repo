@@ -1,0 +1,181 @@
+package Components;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoadBuffer {
+    public String Tag;
+    public boolean busy;
+    public int address;
+    public double result;
+    public Integer timeRemaining;
+    public instruction instruction;
+    public HashMap<Integer, RegFile> regFile; // Floating-point registers    
+    public Cache cache;
+    public Memory memory;
+    public int Latency;
+    
+    // Method to take in instruction
+    public void TakingInInstruction(instruction instruction, HashMap<Integer, RegFile> regFile) {
+        this.instruction = instruction;
+        this.busy = true;
+        this.regFile = regFile;
+        // Loop through the hashmap and compare the destination register in the instruction with RegName
+        for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+            RegFile regFileInstance = entry.getValue();
+            if (instruction.instructionDestinationReg.equals(regFileInstance.RegName)) {
+                regFileInstance.q = this.Tag; // Set the tag for the register
+                break;
+            }
+        }
+    }
+
+    // Initialize the cache link and set the latency and memory
+    public void IntializeTheCacheLinkToTheLoadBufferAndSettingTheLatencyAndTheMmeory(Cache cache, Memory memory) {
+        this.cache = cache;
+        this.memory = memory;
+    }
+
+    // Execution logic for the LOAD operation
+    public void CalculatingAddressAndAccessingMmeory() {
+        // Assuming operands for the load are ready
+        int firstPartOfAddress = Integer.parseInt(this.instruction.j); // First part of address
+        int secondPartOfAddress = Integer.parseInt(this.instruction.k); // Second part of address
+        this.address = firstPartOfAddress + secondPartOfAddress; // Final address calculation
+        
+        // Now, try to read from the cache
+        System.out.println("Attempting to read data from cache...");
+        Byte data = this.cache.readFromCache(this.address, this.memory);
+
+        // Handle cache miss or hit
+        if (this.cache.cacheMiss) {
+            // Cache miss: fetch the block from memory
+            System.out.println("Cache miss! Data not in cache.");
+            
+            // Simulate additional latency for memory access if necessary
+            int additionalLatency = 5; // Example latency for memory access
+            for (int i = 0; i < additionalLatency; i++) {
+                // Could simulate the passage of additional clock cycles here
+            }
+
+            // Now the data should be available in the cache
+            // No need to call readFromCache again, the data is now fetched
+            System.out.println("Cache miss handled, block loaded. Data: " + data);
+
+            // Reset cacheMiss flag
+            this.cache.cacheMiss = false;
+        } else {
+            // Cache hit: proceed with the data
+            System.out.println("Cache hit! Data: " + data);
+        }
+
+        // Update the regFile with the data from the load (this should happen after cache hit/miss)
+        for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+            RegFile regFileInstance = entry.getValue();
+            if (instruction.instructionDestinationReg.equals(regFileInstance.RegName)) {
+                regFileInstance.q = null; // Remove tag
+                regFileInstance.value = data; // Store the data in the register
+                break;
+            }
+        }
+
+        // After handling cache and register updates, set the station to not busy
+        this.busy = false;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("LoadBuffer Details:\n");
+        sb.append("Tag: ").append(Tag).append("\n");
+        sb.append("Busy: ").append(busy).append("\n");
+        sb.append("Address: ").append(address).append("\n");
+        sb.append("Result: ").append(result).append("\n");
+        sb.append("Time Remaining: ").append(timeRemaining != null ? timeRemaining : "N/A").append("\n");
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        // Setup a basic scenario with mock data
+
+        // Create cache and memory objects
+        Cache cache = new Cache();
+        Memory memory = new Memory();
+
+        // Initialize a simple instruction
+        instruction instr = new instruction("R1", "100", "200", "R2");
+
+        // Create a register file with mock values
+        HashMap<Integer, RegFile> regFile = new HashMap<>();
+        regFile.put(1, new RegFile("R1", 0, null));
+        regFile.put(2, new RegFile("R2", 0, null));
+
+        // Create the LoadBuffer and set up
+        LoadBuffer loadBuffer = new LoadBuffer();
+        loadBuffer.Tag = "T1"; // Set a tag for testing
+        loadBuffer.IntializeTheCacheLinkToTheLoadBufferAndSettingTheLatencyAndTheMmeory(cache, memory);
+        loadBuffer.TakingInInstruction(instr, regFile);
+
+        // Run the address calculation and cache/memory access
+        loadBuffer.CalculatingAddressAndAccessingMmeory();
+
+        // Output the status of the LoadBuffer
+        System.out.println(loadBuffer);
+
+        // Output the updated register file
+        for (Map.Entry<Integer, RegFile> entry : regFile.entrySet()) {
+            System.out.println(entry.getValue());
+        }
+    }
+}
+
+// Basic mock classes for testing purposes
+
+class Cache {
+    boolean cacheMiss = true;
+
+    public Byte readFromCache(int address, Memory memory) {
+        // Simulate cache read and return some data (just a dummy example)
+        System.out.println("Reading address " + address + " from cache...");
+        return (byte) 42; // Simulated data
+    }
+}
+
+class Memory {
+    // Just a mock memory class for testing
+}
+
+class instruction {
+    String instructionDestinationReg;
+    String j;
+    String k;
+    String instructionSourceReg;
+
+    public instruction(String instructionDestinationReg, String j, String k, String instructionSourceReg) {
+        this.instructionDestinationReg = instructionDestinationReg;
+        this.j = j;
+        this.k = k;
+        this.instructionSourceReg = instructionSourceReg;
+    }
+}
+
+class RegFile {
+    String RegName;
+    Double value;
+    String q;
+
+    public RegFile(String regName, Double value, String q) {
+        this.RegName = regName;
+        this.value = value;
+        this.q = q;
+    }
+
+    @Override
+    public String toString() {
+        return "RegFile{" +
+                "RegName='" + RegName + '\'' +
+                ", value=" + value +
+                ", q='" + q + '\'' +
+                '}';
+    }
+}

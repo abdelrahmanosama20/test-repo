@@ -1,0 +1,71 @@
+package Components;
+
+import java.util.HashMap;
+//import java.util.Scanner;
+
+public class LoadBuffer {
+    private boolean busy;
+    private int address;
+    private double result;
+    private Integer timeRemaining; // Use Integer for optional values (nullable).
+    private Integer currentIndex; // Use Integer for optional values (nullable).
+    public instruction instruction;
+
+    // Constructor
+    public LoadBuffer(instruction instruction) {
+        // this.busy = busy;
+        // this.address = address;
+        // this.result = result;
+        // this.timeRemaining = timeRemaining;
+        // this.currentIndex = currentIndex;
+        this.instruction = instruction;
+    }
+
+    // Getter and Setter methods for each property
+    public boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
+    }
+
+    public int getAddress() {
+        return address;
+    }
+
+    public void setAddress(int address) {
+        this.address = address;
+    }
+
+    public double getResult() {
+        return result;
+    }
+
+    public void setResult(double result) {
+        this.result = result;
+    }
+
+    public Integer getTimeRemaining() {
+        return timeRemaining;
+    }
+
+    public void setTimeRemaining(Integer timeRemaining) {
+        this.timeRemaining = timeRemaining;
+    }
+
+    public Integer getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(Integer currentIndex) {
+        this.currentIndex = currentIndex;
+    }
+
+    public instruction geInstruction() {
+        return instruction;
+    }
+
+    // Method to generate the hash table
+
+}

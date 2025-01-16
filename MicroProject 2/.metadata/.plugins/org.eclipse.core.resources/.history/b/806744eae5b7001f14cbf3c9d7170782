@@ -1,0 +1,101 @@
+package Components;
+
+import java.util.HashMap;
+//import java.util.Scanner;
+import java.util.Map;
+
+public class LoadBuffer {
+	public String Tag ;
+    public boolean busy;
+    public int address;
+    public double result;
+    public Integer timeRemaining; 
+    public instruction instruction;
+    public HashMap<Integer, RegFile> regFile; // Floating-point registers    
+    public Cache cache;
+    public int Latency ;
+    
+ 
+// should also take the instance of the reg file 
+  // the reg file would actually be a hashmap
+public void TakingInInstruction(instruction instruction,HashMap<Integer, RegFile> regFile) {
+	this.instruction=instruction;
+	this.busy=true;
+	this.regFile=regFile;
+	//Loop Thru the hashmap compare the destination register in the instruction with Attribute RegName
+    for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+    	RegFile RegFileinstance = entry.getValue();
+          if(instruction.instructionDestinationReg.equals(RegFileinstance.RegName)){
+        	  RegFileinstance.q=this.Tag;
+        	  break;
+          }
+};
+
+}
+
+
+public void IntializeTheCacheLinkToTheLoadBufferAndSettingTheLatency(Cache cache,int Latency) {
+	this.cache=cache;
+	this.Latency=Latency;
+}
+
+
+
+// Now we have the instruction , we should extract the operands calculate the address of the Memory where we will access to load 
+
+public void CalculatingAddressAndAccessingMmeory() {
+	// We are assuming that for loads , the operands are always ready ?
+	String TobeCastedtoIntegerFirstPartOfAddress =this.instruction.j;
+    int FirstPartOfAddress = Integer.parseInt(TobeCastedtoIntegerFirstPartOfAddress);
+    String ToBeCastedtoIntegerSecondPartOfAddress = this.instruction.k;
+    int SecondPartOfAddress = Integer.parseInt(ToBeCastedtoIntegerSecondPartOfAddress);
+    this.address=FirstPartOfAddress+SecondPartOfAddress;
+// 	Forget about the memory for now 
+     // maybe call the method that handles memory here , Should take into consideration the latency both the one entered by the user And the one of the cache miss
+    int counter=0;
+    boolean flag=false;
+ // Loop to simulate accessing the cache
+    while (flag==false) {
+        counter++; // Increment the counter
+        if (counter == this.Latency) {
+            flag = true; // Set the flag to true when counter equals latency
+        }
+    }
+    //Then we have accounted for the latency ? , latency entered by the user of the load operation
+    Byte  data =this.cache.readFromCache(this.address);
+    
+    
+    // Check if the data was a cache hit or a miss
+    if (data == null) {
+        // Cache miss: simulate cache miss latency if required
+        System.out.println("Cache miss! Data not in cache.");
+        // Simulate further latency for cache miss if needed (e.g., accessing main memory)
+        for (int i = 0; i < 5; i++) {
+            // Simulate additional latency
+        }
+    } else {
+        // Cache hit: proceed with the data
+        System.out.println("Cache hit! Data: " + data);
+        // the data should be placed in the reg file 
+    }
+    this.busy=false;
+    //Should remove the tag from the REG FILE and place the content ?
+}
+
+
+
+
+@Override
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("LoadBuffer Details:\n");
+    sb.append("Tag: ").append(Tag).append("\n");
+    sb.append("Busy: ").append(busy).append("\n");
+    sb.append("Address: ").append(address).append("\n");
+    sb.append("Result: ").append(result).append("\n");
+    sb.append("Time Remaining: ").append(timeRemaining != null ? timeRemaining : "N/A").append("\n");
+    return sb.toString();
+}
+
+
+}

@@ -1,0 +1,256 @@
+package Components;
+
+public class instruction {
+
+    private String instructionOP; // Operation (e.g., ADD, MUL, etc.)
+    private String instructionDestinationReg; // Destination register
+    private String j; // First operand
+    private String k; // Second operand
+    private Integer issue; // Issue cycle
+    private Integer executionStart; // Execution start cycle
+    private Integer executionFinish; // Execution finish cycle
+    private Integer writeBack; // Write-back cycle
+    // private String toStation; // Reservation station
+
+    // Constructor to parse the string
+    public instruction(String instruction) {
+        if (instruction != null && !instruction.isEmpty()) {
+            // Trim any leading/trailing spaces
+            instruction = instruction.trim();
+
+            // Parse opcode (everything until the first space)
+            int firstSpaceIndex = instruction.indexOf(' ');
+            if (firstSpaceIndex != -1) {
+                this.instructionOP = instruction.substring(0, firstSpaceIndex);
+
+                // Parse destination register (everything after the space up to the first comma)
+                int firstCommaIndex = instruction.indexOf(',', firstSpaceIndex + 1);
+                if (firstCommaIndex != -1) {
+                    this.instructionDestinationReg = instruction.substring(firstSpaceIndex + 1, firstCommaIndex).trim();
+
+                    // Parse first operand (everything after the first comma up to the second comma)
+                    int secondCommaIndex = instruction.indexOf(',', firstCommaIndex + 1);
+                    if (secondCommaIndex != -1) {
+                        this.j = instruction.substring(firstCommaIndex + 1, secondCommaIndex).trim();
+
+                        // Parse second operand (everything after the second comma)
+                        this.k = instruction.substring(secondCommaIndex + 1).trim();
+                    } else {
+                        // No second comma means only one operand
+                        this.j = instruction.substring(firstCommaIndex + 1).trim();
+                        this.k = null;
+                    }
+                } else {
+                    // No comma means no operands
+                    this.instructionDestinationReg = instruction.substring(firstSpaceIndex + 1).trim();
+                    this.j = null;
+                    this.k = null;
+                }
+            }
+        }
+    }
+
+    // Getters and Setters for all attributes
+
+    public String getInstructionOP() {
+        return instructionOP;
+    }
+
+    public void setInstructionOP(String instructionOP) {
+        this.instructionOP = instructionOP;
+    }
+
+    public String getInstructionDestinationReg() {
+        return instructionDestinationReg;
+    }
+
+    public void setInstructionDestinationReg(String instructionDestinationReg) {
+        this.instructionDestinationReg = instructionDestinationReg;
+    }
+
+    public String getJ() {
+        return j;
+    }
+
+    public void setJ(String j) {
+        this.j = j;
+    }
+
+    public String getK() {
+        return k;
+    }
+
+    public void setK(String k) {
+        this.k = k;
+    }
+
+    public Integer getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Integer issue) {
+        this.issue = issue;
+    }
+
+    public Integer getExecutionStart() {
+        return executionStart;
+    }
+
+    public void setExecutionStart(Integer executionStart) {
+        this.executionStart = executionStart;
+    }
+
+    public Integer getExecutionFinish() {
+        return executionFinish;
+    }
+
+    public void setExecutionFinish(Integer executionFinish) {
+        this.executionFinish = executionFinish;
+    }
+
+    public Integer getWriteBack() {
+        return writeBack;
+    }
+
+    public void setWriteBack(Integer writeBack) {
+        this.writeBack = writeBack;
+    }
+
+    // public String getToStation() {
+    // return toStation;
+    // }
+
+    // public void setToStation() {
+    // switch (instructionOP) {
+    // case "DADDI":
+    // // Logic for DADDI operation
+    // toStation = "AddStation";
+    // break;
+
+    // case "DSUBI":
+    // // Logic for DSUBI operation
+    // toStation = "SubStation";
+    // break;
+
+    // case "ADD.D":
+    // // Logic for ADD.D operation
+    // toStation = "AddStation";
+    // break;
+
+    // case "ADD.S":
+    // // Logic for ADD.S operation
+    // toStation = "AddStation";
+    // break;
+
+    // case "SUB.D":
+    // // Logic for SUB.D operation
+    // toStation = "SubStation";
+    // break;
+
+    // case "SUB.S":
+    // // Logic for SUB.S operation
+    // toStation = "SubStation";
+    // break;
+
+    // case "MUL.D":
+    // // Logic for MUL.D operation
+    // toStation = "MulStation";
+    // break;
+
+    // case "MUL.S":
+    // // Logic for MUL.S operation
+    // toStation = "MulStation";
+    // break;
+
+    // case "DIV.D":
+    // // Logic for DIV.D operation
+    // toStation = "DivStation";
+    // break;
+
+    // case "DIV.S":
+    // // Logic for DIV.S operation
+    // toStation = "DivStation";
+    // break;
+
+    // case "LW":
+    // // Logic for LW operation
+    // toStation = "LoadStation";
+    // break;
+
+    // case "LD":
+    // // Logic for LD operation
+    // toStation = "LoadStation";
+    // break;
+
+    // case "L.S":
+    // // Logic for L.S operation
+    // toStation = "LoadStation";
+    // break;
+
+    // case "L.D":
+    // // Logic for L.D operation
+    // toStation = "LoadStation";
+    // break;
+
+    // case "SW":
+    // // Logic for SW operation
+    // toStation = "StoreStation";
+    // break;
+
+    // case "SD":
+    // // Logic for SD operation
+    // toStation = "StoreStation";
+    // break;
+
+    // case "S.S":
+    // // Logic for S.S operation
+    // toStation = "StoreStation";
+    // break;
+
+    // case "S.D":
+    // // Logic for S.D operation
+    // toStation = "StoreStation";
+    // break;
+
+    // case "BNE":
+    // // Logic for BNE operation
+    // toStation = "BranchStation";
+    // break;
+
+    // case "BEQ":
+    // // Logic for BEQ operation
+    // toStation = "BranchStation";
+    // break;
+
+    // default:
+    // // Default behavior if instructionOP does not match any case
+    // toStation = "UnknownStation";
+    // break;
+    // }
+    // }
+
+    // @Override
+    // public String toString() {
+    // return "Instruction {" +
+    // "operation='" + instructionOP + '\'' +
+    // ", destinationReg='" + instructionDestinationReg + '\'' +
+    // ", operand1='" + j + '\'' +
+    // ", operand2='" + k + '\'' +
+    // ", issue=" + issue +
+    // ", executionStart=" + executionStart +
+    // ", executionFinish=" + executionFinish +
+    // ", writeBack=" + writeBack +
+    // ", toStation='" + toStation + '\'' +
+    // '}';
+    // }
+
+    public static void main(String[] args) {
+        instruction instr1 = new instruction("L.D F6,0");
+        instruction instr2 = new instruction("SUB.D F8,F2,F6");
+
+        // Print the objects
+        System.out.println(instr1); // toString() is implicitly called
+        System.out.println(instr2); // toString() is implicitly called
+    }
+
+}

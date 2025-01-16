@@ -1,0 +1,22 @@
+package Components;
+
+import java.util.Hashtable;
+
+public class RegFile {
+    private String value;
+    private String q; // Tag
+    private String regName;
+
+    public RegFile(String value, String q, String regName) {
+        this.value = value;
+        this.q = q;
+        this.regName = regName;
+    }
+
+    @Override
+    public String toString() {
+        return "RegFile {value='" + value + 
+               "', tag='" + q + 
+               "', regName='" + regName + "'}";
+    }
+}
