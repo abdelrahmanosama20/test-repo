@@ -1,0 +1,116 @@
+.activity-card {
+  background-color: white; /* Light background for the activity card */
+  color: #333; /* Dark text for readability */
+  border-radius: 10px; /* Rounded corners for a softer look */
+  padding: 20px; /* Padding around the content */
+  margin: 15px; /* Margin to separate multiple cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+  transition: transform 0.2s; /* Animation for hover effect */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack elements vertically */
+  position: relative; /* Allow absolute positioning within this container */
+  width: 1000px;
+}
+.itinerary-card,.opening-hours {
+  background-color: white; /* Light background for the activity card */
+  color: #333; /* Dark text for readability */
+  border-radius: 10px; /* Rounded corners for a softer look */
+  padding: 20px; /* Padding around the content */
+  margin: 15px; /* Margin to separate multiple cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+  transition: transform 0.2s; /* Animation for hover effect */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack elements vertically */
+  position: relative; /* Allow absolute positioning within this container */
+  width: 1000px;
+}
+
+  
+  .activity-card:hover {
+    transform: scale(1.02); /* Scale up on hover for interactivity */
+  }
+  
+  .activity-title {
+    font-size: 1.5em; /* Larger font size for the title */
+    margin-bottom: 10px; /* Space below the title */
+    color: #003366; /* Dark blue for the title for consistency */
+  }
+  
+  .activity-date,
+  .activity-time,
+  .activity-location,
+  .activity-price,
+  .activity-duration,
+  .activity-category,
+  .activity-ratings,
+  .activity-special-discount,
+  .activity-booking-status {
+    margin: 5px 0; /* Space between each piece of information */
+  }
+  
+  .tags-and-buttons {
+    display: flex; /* Use flexbox for tags and buttons */
+    justify-content: space-between; /* Distribute space between tags and buttons */
+    align-items: center; /* Vertically align tags and buttons */
+    margin-top: 10px; /* Space above this row */
+  }
+  
+  .tags-container {
+    display: inline-flex; /* Display tags inline */
+    flex-wrap: wrap; /* Allow wrapping for tags */
+  }
+
+  .selected-tag {
+    background-color: green; /* Background color for selected tag */
+    color: white; /* Text color for selected tag */
+}
+  
+  .activity-tag {
+    background-color: #0284c7; /* Blue color for tags to match your theme */
+    color: white; /* White text for contrast */
+    border-radius: 4px; /* Rounded corners for tags */
+    padding: 5px 10px; /* Padding around tag text */
+    margin: 2px; /* Space between tags */
+    display: inline-block; /* Inline block for tags */
+    transition: background-color 0.2s; /* Smooth transition for hover */
+  }
+  
+  .activity-tag:hover {
+    background-color: #0369a1; /* Darker shade for hover effect on tags */
+  }
+  
+  /* Styles for buttons */
+  .activity-buttons {
+    display: flex; /* Keep buttons inline */
+    gap: 10px; /* Space between buttons */
+    position: absolute; /* Position the buttons absolutely */
+    bottom: 20px; /* Distance from the bottom */
+    right: 20px; /* Distance from the right */
+}
+  
+  .edit-button,
+  .delete-button {
+    background-color: green; /* Initial color for edit button */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+    white-space: nowrap; /* Ensure buttons don't wrap text */
+  }
+  
+  .delete-button {
+    background-color: red; /* Red background */
+  }
+  
+  /* Optional: Add hover effects */
+  .edit-button:hover {
+    background-color: darkgreen; /* Darker green on hover */
+  }
+  
+  .delete-button:hover {
+    background-color: darkred; /* Darker red on hover */
+  }
+  
+
+

@@ -1,0 +1,28 @@
+.advertiser-page {
+    position: relative; /* Enable positioning for child elements */
+    padding: 20px; /* Add padding if needed */
+}
+
+.museum-image {
+    max-width: 300px; /* Set a maximum width for the image */
+    height: auto;     /* Keep the aspect ratio */
+    margin: 10px 0;   /* Add some margin for spacing */
+  }
+
+.create-activity-button {
+    background-color: #28a745; /* Green color */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding around the text */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    position: absolute; /* Positioning */
+    top: 20px; /* Adjust vertical position */
+    right: 20px; /* Adjust horizontal position */
+    font-size: 1em; /* Font size */
+    transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+.create-activity-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
