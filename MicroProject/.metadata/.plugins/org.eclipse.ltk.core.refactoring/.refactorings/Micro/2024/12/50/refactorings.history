@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename compilation unit &apos;Components.Databus.java&apos; to &apos;CommonDataBus.java&apos;&#x0D;&#x0A;- Original project: &apos;Micro&apos;&#x0D;&#x0A;- Original element: &apos;Components.Databus.java&apos;&#x0D;&#x0A;- Renamed element: &apos;Components.CommonDataBus.java&apos;" description="Rename compilation unit &apos;Databus.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;Components{Databus.java" name="CommonDataBus.java" references="false" stamp="1733852174208" version="1.0"/>
+</session>

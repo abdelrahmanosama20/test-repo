@@ -1,0 +1,39 @@
+package Components;
+
+public class ReservationStationEntry {
+    public boolean busy;
+    public String Tag ;
+    public String op;
+    public Double vj; // Use Double for optional values (nullable).
+    public Double vk; // Use Double for optional values (nullable).
+    public String qj;
+    public String qk;
+    public Integer timeRemaining; // Use Integer for optional values (nullable).
+    public Double result; // Use Double for optional values (nullable).
+    public Integer currentIndex; // Use Integer for optional values (nullable).
+    public instruction instruction;
+    // tag string
+
+
+    public void takeinstruction(instruction instruction) {
+        this.instruction = instruction;
+        this.op=this.instruction.getInstructionOP();
+        this.busy = true;
+    }
+
+   public void SettingTheStation(String Tag,boolean Operand1Ready,boolean Operand2Ready) {
+	   //Assign a tag to the instruction , and populate other fields
+	   this.Tag=Tag;
+	   if(!Operand1Ready) {
+		   // then we will populate the qj , should hold the tag of the instruction that creates it 
+		  // this.qj=
+	   }
+	   
+   }
+
+    @Override
+    public String toString() {
+        return "ReservationStationEntry: [Instruction = " + instruction + "]";
+    }
+
+}

@@ -1,0 +1,51 @@
+package Components;
+
+
+public class Cache {
+    public int cacheSize; // Number of bytes the cache can hold
+    public int blockSize; // Number of bytes fetched from memory in one go
+    public byte[] cache;  // Cache storage
+    private int cacheIndex = 0; // Points to the next position to write in the cache
+
+    public Cache(int cacheSize, int blockSize) {
+        this.cacheSize = cacheSize;
+        this.blockSize = blockSize;
+        this.cache = new byte[cacheSize]; // Initialize the cache
+    }
+
+    // Generalized method to fetch a block of bytes from memory
+    public byte[] fetchBlockFromMemory(int address, Memory memory) {
+        // Ensure the address is valid
+        if (address < 0 || address + blockSize - 1 >= memory.memory.length) {
+            throw new IllegalArgumentException("Address out of bounds");
+        }
+
+        // Fetch the specified number of bytes (blockSize) from memory
+        byte[] block = new byte[blockSize];
+        for (int i = 0; i < blockSize; i++) {
+            block[i] = memory.memory[address + i];
+        }
+
+        // Save the block into the cache
+        saveBlockToCache(block);
+
+        return block;
+    }
+
+    // Save the block to the cache
+    private void saveBlockToCache(byte[] block) {
+        // Check if there’s enough space in the cache
+        if (cacheIndex + blockSize > cacheSize) {
+            // Reset the index to overwrite from the beginning (simple eviction policy)
+            cacheIndex = 0;
+        }
+
+        // Write the block to the cache at the current index
+        for (int i = 0; i < blockSize; i++) {
+            cache[cacheIndex + i] = block[i];
+        }
+
+        // Move the cache index forward
+        cacheIndex += blockSize;
+    }
+}

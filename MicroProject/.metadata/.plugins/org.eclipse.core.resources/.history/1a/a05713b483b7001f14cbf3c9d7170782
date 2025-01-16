@@ -1,0 +1,54 @@
+package Components;
+
+import java.util.HashMap;
+//import java.util.Scanner;
+import java.util.Map;
+
+public class LoadBuffer {
+	public String Tag ;
+    public boolean busy;
+    public int address;
+    public double result;
+    public Integer timeRemaining; 
+    public instruction instruction;
+    public HashMap<Integer, RegFile> regFile; // Floating-point registers    
+// should also take the instance of the reg file 
+  // the reg file would actually be a hashmap
+public void TakingInInstruction(instruction instruction,HashMap<Integer, RegFile> regFile) {
+	this.instruction=instruction;
+	this.busy=true;
+	this.regFile=regFile;
+	//Loop Thru the hashmap compare the destination register in the instruction with Attribute RegName
+    for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+    	RegFile RegFileinstance = entry.getValue();
+          if(instruction.instructionDestinationReg.equals(RegFileinstance.RegName)){
+        	  RegFileinstance.q=this.Tag;
+        	  break;
+          }
+};
+
+}
+// Now we have the instruction , we should extract the operands calculate the address of the Memory where we will access to load 
+
+public void CalculatingAddress() {
+	// We are assuming that for loads , the operands are always ready ?
+	this.instruction.
+}
+
+
+
+
+@Override
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("LoadBuffer Details:\n");
+    sb.append("Tag: ").append(Tag).append("\n");
+    sb.append("Busy: ").append(busy).append("\n");
+    sb.append("Address: ").append(address).append("\n");
+    sb.append("Result: ").append(result).append("\n");
+    sb.append("Time Remaining: ").append(timeRemaining != null ? timeRemaining : "N/A").append("\n");
+    return sb.toString();
+}
+
+
+}

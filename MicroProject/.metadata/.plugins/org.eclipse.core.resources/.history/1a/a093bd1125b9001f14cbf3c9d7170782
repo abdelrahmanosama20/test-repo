@@ -1,0 +1,124 @@
+package Components;
+
+import java.util.HashMap;
+//import java.util.Scanner;
+import java.util.Map;
+
+public class LoadBuffer {
+	public String Tag ;
+    public boolean busy;
+    public int address;
+    public double result;
+    public Integer timeRemaining; 
+    public instruction instruction;
+    public HashMap<Integer, RegFile> regFile; // Floating-point registers    
+    public Cache cache;
+    public Memory memory;
+    public int Latency ;
+    
+ 
+// should also take the instance of the reg file 
+  // the reg file would actually be a hashmap
+public void TakingInInstruction(instruction instruction,HashMap<Integer, RegFile> regFile) {
+	this.instruction=instruction;
+	this.busy=true;
+	this.regFile=regFile; 
+	//Loop Thru the hashmap compare the destination register in the instruction with Attribute RegName
+    for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+    	RegFile RegFileinstance = entry.getValue();
+          if(instruction.instructionDestinationReg.equals(RegFileinstance.RegName)){
+        	  RegFileinstance.q=this.Tag;
+        	  break;
+          }
+};
+
+}
+
+
+public void IntializeTheCacheLinkToTheLoadBufferAndSettingTheLatencyAndTheMmeory(Cache cache,int Latency,Memory memory) {
+	this.cache=cache;
+	this.Latency=Latency;
+	this.memory=memory;
+}
+
+
+
+// Now we have the instruction , we should extract the operands calculate the address of the Memory where we will access to load 
+
+
+//Execution Logic of the LOAD
+public void CalculatingAddressAndAccessingMmeory() {
+    // Assuming operands for the load are ready
+    String TobeCastedtoIntegerFirstPartOfAddress = this.instruction.j;
+    int FirstPartOfAddress = Integer.parseInt(TobeCastedtoIntegerFirstPartOfAddress);
+    String ToBeCastedtoIntegerSecondPartOfAddress = this.instruction.k;
+    int SecondPartOfAddress = Integer.parseInt(ToBeCastedtoIntegerSecondPartOfAddress);
+    this.address = FirstPartOfAddress + SecondPartOfAddress;
+
+    // Simulate the latency by looping until the latency period has passed
+    int counter = 0;
+    boolean flag = false;
+    while (!flag) {
+        counter++; // Increment the counter
+        if (counter == this.Latency) {
+            flag = true; // Set the flag to true when counter equals latency
+        }
+    }
+
+    // Now, try to read from the cache
+    System.out.println("Attempting to read data from cache...");
+    Byte data = this.cache.readFromCache(this.address, this.memory);
+
+    // Handle cache hit or miss
+    if (this.cache.cacheMiss) {
+        // Cache miss: fetch the block from memory
+        System.out.println("Cache miss! Data not in cache.");
+        // Optionally, simulate additional latency for memory access if needed
+        int additionalLatency = 5; // Example: memory latency
+        for (int i = 0; i < additionalLatency; i++) {
+        }
+
+        // Now the data should be available in the cache
+        // No need to call readFromCache again; data is already available from the block fetched
+        // This data has already been fetched into the cache by the previous call
+        System.out.println("Cache miss handled, block loaded. Data: " + data);
+
+        // Reset cacheMiss flag
+        this.cache.cacheMiss = false;
+    }
+    
+        // Cache hit: proceed with the data
+        System.out.println("Cache hit! Data: " + data);
+        ///Cache hit here we should take the data and set the regfile content and remove the tag 
+        for (Map.Entry<Integer, RegFile> entry : this.regFile.entrySet()) {
+        	RegFile RegFileinstance = entry.getValue();
+              if(instruction.instructionDestinationReg.equals(RegFileinstance.RegName)){
+            	  RegFileinstance.q=this.Tag;
+            	  break;
+              }
+    };
+    
+
+    // Handle the processing after the data is read
+    // For example: placing the data in the register file
+    this.busy = false;
+}
+
+
+
+
+
+@Override
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("LoadBuffer Details:\n");
+    sb.append("Tag: ").append(Tag).append("\n");
+    sb.append("Busy: ").append(busy).append("\n");
+    sb.append("Address: ").append(address).append("\n");
+    sb.append("Result: ").append(result).append("\n");
+    sb.append("Time Remaining: ").append(timeRemaining != null ? timeRemaining : "N/A").append("\n");
+    return sb.toString();
+}
+
+
+}

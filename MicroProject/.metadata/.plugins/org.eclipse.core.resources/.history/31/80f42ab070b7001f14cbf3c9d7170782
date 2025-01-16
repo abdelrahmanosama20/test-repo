@@ -1,0 +1,156 @@
+package Components;
+
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Scanner;
+
+public class TomasuloProgress {
+    public HashMap<Integer, ReservationStationEntry> addReservationStations; // Use HashMap for add reservation stations
+    public HashMap<Integer, ReservationStationEntry> mulReservationStations; // Use HashMap for mul reservation stations
+    public HashMap<Integer, LoadBuffer> loadBuffers; // Use HashMap for load buffers
+    public HashMap<Integer, StoreBuffer> storeBuffers; // Use HashMap for store buffers
+    public int nextIssue;
+    public int currentClock;
+    // private List<InstructionHistoryEntry> instructionHistory;
+    public HashMap<Integer, instruction> instructionQueue; // Use HashMap for instructions with indices as keys
+    public HashMap<Integer, Integer> cache; // Memory cache
+    public HashMap<Integer, RegFile> fpRegisters; // Floating-point registers
+    public HashMap<Integer, RegFile> intRegisters; // Integer registers
+    public HashMap<String, Integer> latencies; // Instruction latencies
+
+    public TomasuloProgress() {
+        this.instructionQueue = new HashMap<>();
+        this.fpRegisters = new HashMap<>();
+        this.intRegisters = new HashMap<>();
+        this.addReservationStations = new HashMap<>();
+        this.mulReservationStations = new HashMap<>();
+        this.loadBuffers = new HashMap<>();
+        this.storeBuffers = new HashMap<>();
+    }
+
+
+    public void generateInstructionQueueAsHashTable(int numnOfInstructions) {
+        for (int i = 0; i < numnOfInstructions; i++) {
+            instruction instruction = new instruction("");
+            instructionQueue.put(i, instruction);
+        }
+    }
+// 
+    public void promptInstruction() {
+        Scanner scanner = new Scanner(System.in);
+        // Prompt the user to enter an instruction
+        System.out.print("Enter an instruction: ");
+        String instruction = scanner.nextLine();
+        scanner.close();
+        instruction parsedInstruction = new instruction(instruction);
+
+        instructionQueue.put(0, parsedInstruction);
+
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Instruction Queue:\n");
+        for (Map.Entry<Integer, instruction> entry : instructionQueue.entrySet()) {
+            Integer index = entry.getKey();
+            instruction instr = entry.getValue();
+            sb.append("Index ").append(index).append(": ").append(instr).append("\n");
+        }
+        return sb.toString();
+    }
+
+    
+    //Created the instruction Queue successfully 
+      // now we need to populate the RegFile , with the destination Registers in all the instructions in the queue for the names
+     /// Null for the q feild , and null for the value 
+    public void populateRegFile() {
+    	// Loop thro the hashmap of instructions 
+        for (Map.Entry<Integer, instruction> entry : instructionQueue.entrySet()) {
+            instruction instr = entry.getValue();
+            //Create A new instance of the regfile 
+             //Value , StringQ which is the tag , RegName
+            RegFile rowInRegFile = new RegFile(null,null,instr.getInstructionDestinationReg());
+        }	
+    }
+       
+    
+    public void populateLoadBuffers(int numOfBuffers) {
+        // takes the number of wanted loadbuffers , in our design that means the number of rows in one load buffer 
+    	// what we need to do is to dynamically add to the hashmap , that numofbuffers many times instances 
+         for(int i=0;i<numOfBuffers;i++) {
+	            LoadBuffer LoadBuffers = new LoadBuffer();
+	            //created an instance of a load buffer , set the tag of each one 
+	            LoadBuffers.Tag="Tag"+i;
+	            //Add it to the hashmap
+	            loadBuffers.put(i, LoadBuffers);
+                  }
+         }
+ 
+       
+
+    public void FindResStation() {
+        
+        // Loop through the instruction queue        
+        for (Map.Entry<Integer, instruction> entry : instructionQueue.entrySet()) {
+            Integer instructionIndex = entry.getKey();
+            instruction instr = entry.getValue();
+
+            // Get the operation type (e.g., ADD.D, MUL.D, etc.)
+            String operation = instr.getInstructionOP();
+
+            // Determine which reservation station to use based on the operation
+            if (operation.equals(ALUOperations.Operation.ADD_D.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.ADD_S.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.SUB_D.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.SUB_S.getOperationName())) {
+
+                    //LOOP FOO2 HENA checking if at least one station is busy or not (iterating over the whole hashmap)
+                // Add the instruction to the AddReservationStations
+                for (Map.Entry<Integer, ReservationStationEntry> reservationAddStations : addReservationStations.entrySet()) {
+                    ReservationStationEntry addStation = reservationAddStations.getValue();
+                    if(!addStation.busy){
+                    //   addReservationStations.put(instructionIndex, new ReservationStationEntry());
+                       addStation.takeinstruction(instr); // set the instruction in the reservation file 
+                       break ;
+                    }
+
+                }
+
+            } else if (operation.equals(ALUOperations.Operation.MUL_D.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.MUL_S.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.DIV_D.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.DIV_S.getOperationName())) {
+
+                // Add the instruction to the MulReservationStations
+                mulReservationStations.put(instructionIndex, new ReservationStationEntry());
+
+            } else if (operation.equals(ALUOperations.Operation.LW.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.LD.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.L_S.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.L_D.getOperationName())) {
+
+                // Add the instruction to the LoadBuffers
+                loadBuffers.put(instructionIndex, new LoadBuffer());
+
+            } else if (operation.equals(ALUOperations.Operation.SW.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.SD.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.S_S.getOperationName()) ||
+                    operation.equals(ALUOperations.Operation.S_D.getOperationName())) {
+
+                // Add the instruction to the StoreBuffers
+                storeBuffers.put(instructionIndex, new StoreBuffer(instr));
+            }
+        }
+    }
+
+
+
+    public static void main(String[] args) {
+        // Create an instance of TomasuloProgress
+        TomasuloProgress tomasuloProgress = new TomasuloProgress();
+        tomasuloProgress.promptInstruction();
+        // Print the instructions using toString()
+        System.out.println(tomasuloProgress.toString());
+    }
+}
